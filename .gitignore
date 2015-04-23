@@ -1,2 +1,9 @@
 # Photoshop files
 *.psd
+
+# Release folder
+/release
+
+# Sublime project files
+*.sublime-project
+*.sublime-workspace
