@@ -112,20 +112,12 @@ var MetricFTW = MetricFTW || {
     // Much thanks to Rocket for providing a list of units and measurements!
     // https://github.com/cpancake/unitconvert/blob/master/default.json
     peasant_table: [
-        { 
-            name: "kg",
-            aliases: "pound,pounds,lb,lbs",
-            convert: function(value) {
-                return value * 0.4536;
-            }
-        },
-        { 
-            name: "grams",
-            aliases: "ounce,ounces,oz",
-            convert: function(value) {
-                return value * 28.41;
-            }
-        }
+        { name: "kg", aliases: "pounds,pound,lbs,lb", convert: function(value) { return value * 0.4536; }  },
+        { name: "grams", aliases: "ounces,ounce,oz", convert: function(value) { return value * 28.41; }    },
+        { name: "millimeters", aliases: "inches,inch", convert: function(value) { return value * 25.4; }   },
+        { name: "centimeters", aliases: "foot,feet,ft", convert: function(value) { return value * 30.48; } },
+        { name: "kilometers", aliases: "miles,mile", convert: function(value) { return value * 1.609; }    },
+        { name: "meters", aliases: "yards,yard", convert: function(value) { return value * 0.9144; }       }
     ]
 }
 
