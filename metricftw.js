@@ -66,7 +66,7 @@ var MetricFTW = MetricFTW || {
                     found = true;
                     return {
                         name: this.peasant_table[i].name,
-                        value: this.peasant_table[i].convert(value)
+                        value: this.peasant_table[i].convert(value).toFixed(2)
                     }
                     break;
                 }
@@ -87,10 +87,11 @@ var MetricFTW = MetricFTW || {
         return string.replace(/ /g, "");
     },
 
+    // http://docs.oracle.com/cd/E19455-01/806-0169/overview-9/index.html
     parseNumeric: function(numString) {
-        var re = /[\\ \\.\\,]+/gi;
+        var re = /[\\ \\,]+/gi;
         numString = numString.replace(re, ""); // parseInt doesn't remove ','
-        return parseInt(numString);
+        return parseFloat(numString);
     },
 
     generateNameReg: function() {
