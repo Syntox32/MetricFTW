@@ -57,23 +57,30 @@ var MetricFTW = MetricFTW || {
         value = this.parseNumeric(match[1]);
         var newName = "" , newValue = 0;
 
-        switch(name) {
-            case "pounds":
-            case "lbs":
-            case "lb":
-                newName = "kg";
-                newValue = this.peasant_table["pounds"] * value;
+        var found = false;
+        var dictLen = this.peasant_table.length;
+        for(var i = 0; i < dictLen; i++) {
+            var abbr = this.peasant_table[i].aliases.split(",");
+            for(var j = 0; j < abbr.length; j++) {
+                if (name === abbr[j]) {
+                    found = true;
+                    return {
+                        name: this.peasant_table[i].name,
+                        value: this.peasant_table[i].convert(value)
+                    }
+                    break;
+                }
+            }
+            if (found) {
                 break;
-            default:
-                newName = "unknown";
-                newValue = "-1";
-                break;
+            }
         }
 
-        return {
-            name: newName,
-            value: newValue
+        if (!found) { 
+            console.log("this can't happen, right?");
         }
+
+        return null;
     },
         
     removeWhitespace: function(string) {
@@ -86,9 +93,26 @@ var MetricFTW = MetricFTW || {
         return parseInt(numString);
     },
 
-    peasant_table: {
-        pounds: 0.4536
-    }
+    // http://www.initium.demon.co.uk/converts/metimp.htm
+    //
+    // Much thanks to Rocket for providing a list of units and measurements!
+    // https://github.com/cpancake/unitconvert/blob/master/default.json
+    peasant_table: [
+        { 
+            name: "kg",
+            aliases: "pound,pounds,lb,lbs",
+            convert: function(value) {
+                return value * 0.4536;
+            }
+        },
+        { 
+            name: "grams",
+            aliases: "ounce,ounces,oz",
+            convert: function(value) {
+                return value * 28.41;
+            }
+        }
+    ]
 }
 
 var init = function() {
