@@ -4,7 +4,7 @@ var MetricFTW = MetricFTW || {
     // http://james.padolsey.com/javascript/find-and-replace-text-with-javascript/
     filterImperial: function(searchNode) {
         var valueReg = "(\\d[0-9\\/\\,\\.\\s]+\\s*)";
-        var nameReg= "(pounds|lbs|lb)";
+        var nameReg = MetricFTW.generateNameReg();
         var reg = new RegExp(valueReg + nameReg, "gi");
 
         var childNodes = (searchNode || document.body).childNodes,
@@ -91,6 +91,19 @@ var MetricFTW = MetricFTW || {
         var re = /[\\ \\.\\,]+/gi;
         numString = numString.replace(re, ""); // parseInt doesn't remove ','
         return parseInt(numString);
+    },
+
+    generateNameReg: function() {
+        var aliasarr = [];
+        var dictLen = this.peasant_table.length;
+        for(var i = 0; i < dictLen; i++) {
+            var abbr = this.peasant_table[i].aliases.split(",");
+            var abbrlen = abbr.length;
+            for(var j = 0; j < abbrlen; j++) {
+                aliasarr.push(abbr[j]);
+            }
+        }
+        return "(" + aliasarr.join("|") + ")";
     },
 
     // http://www.initium.demon.co.uk/converts/metimp.htm
