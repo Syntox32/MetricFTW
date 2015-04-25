@@ -1,3 +1,5 @@
+// JSHint wants me to use this or I'll get 'too many errors'
+"use strict";
 
 var MetricFTW = MetricFTW || {
 
@@ -8,18 +10,17 @@ var MetricFTW = MetricFTW || {
         var reg = new RegExp(valueReg + nameReg, "gi");
 
         var childNodes = (searchNode || document.body).childNodes,
-            excludes = 'html,head,style,title,link,meta,script,object,iframe',
+            excludes = "html,head,style,title,link,meta,script,object,iframe",
             cnLength = childNodes.length,
             peasantryFound = 0;
 
         while (cnLength--) {
             var currentNode = childNodes[cnLength];
-            if (currentNode.nodeType === 1 
-                && (excludes + ',').indexOf(currentNode.nodeName.toLowerCase() + ',') === -1) {
-                peasantryFound += arguments.callee(currentNode);
+            if (currentNode.nodeType === 1 && (excludes + ",").indexOf(currentNode.nodeName.toLowerCase() + ",") === -1) {
+                peasantryFound += MetricFTW.filterImperial(currentNode);
             }
 
-            m = reg.exec(currentNode.data);
+            var m = reg.exec(currentNode.data);
             if (currentNode.nodeType !== 3 || m === null) {
                 continue;
             }
@@ -28,16 +29,16 @@ var MetricFTW = MetricFTW || {
             reg.lastIndex = 0;
             
             peasantryFound++;
-            metric = MetricFTW.convertToMetric(m);
+            var metric = MetricFTW.convertToMetric(m);
 
             // I'll add a star cause I'll forget I have it turned on if it changes something
-            replacement = metric.value.toString() + " " + metric.name + "*";
+            var replacement = metric.value.toString() + " " + metric.name + "*";
 
             // replace the peasantry with metric values
             var parent = currentNode.parentNode,
                 frag = (function() {
                     var html = currentNode.data.replace(reg, replacement),
-                        wrap = document.createElement('div'),
+                        wrap = document.createElement("div"),
                         frag = document.createDocumentFragment();
                     wrap.innerHTML = html;
                     while (wrap.firstChild) {
@@ -53,9 +54,8 @@ var MetricFTW = MetricFTW || {
 
     // http://www.initium.demon.co.uk/converts/metimp.htm
     convertToMetric: function(match) {
-        name = this.removeWhitespace(match[2].toLowerCase());
-        value = this.parseNumeric(match[1]);
-        var newName = "" , newValue = 0;
+        var name = this.removeWhitespace(match[2].toLowerCase());
+        var value = this.parseNumeric(match[1]);
 
         var found = false;
         var dictLen = this.peasant_table.length;
@@ -67,8 +67,7 @@ var MetricFTW = MetricFTW || {
                     return {
                         name: this.peasant_table[i].name,
                         value: this.peasant_table[i].convert(value).toFixed(2)
-                    }
-                    break;
+                    };
                 }
             }
             if (found) {
@@ -119,13 +118,13 @@ var MetricFTW = MetricFTW || {
         { name: "kilometers", aliases: "miles,mile", convert: function(value) { return value * 1.609; }    },
         { name: "meters", aliases: "yards,yard", convert: function(value) { return value * 0.9144; }       }
     ]
-}
+};
 
-var init = function() {
+function init() {
     var numActs =  MetricFTW.filterImperial();
     console.log("Removed " + numActs.toString() + " act(s) of peasantry!");
     return numActs;
-};
+}
 
 chrome.extension.sendMessage({
     action: "filterImperial",
